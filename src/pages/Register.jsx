@@ -9,6 +9,7 @@ const RegisterPage=()=>{
 
     const firebase=useFirebase();
     const navigate=useNavigate();
+    const [name,setname]=useState();
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
 
@@ -23,15 +24,24 @@ const RegisterPage=()=>{
     const handlesubmit=async(e)=>{
     e.preventDefault();
     console.log('signing up a user')
-    const resp= await firebase.sign_up_email_password(email,password);
+    const resp= await firebase.sign_up_email_password(name,email,password);
     console.log('account was created',resp);
     };
     
 
     console.log(firebase);
     return(
+      
         <div className="container mt-5">
            <Form>
+          
+       <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Name</Form.Label>
+        <Form.Control 
+        onChange={(e)=>setname(e.target.value)}
+        value={name}
+        type="name" placeholder="Enter name" />
+       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control 

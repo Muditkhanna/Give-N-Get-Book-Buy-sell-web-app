@@ -25,7 +25,7 @@ useEffect(()=>{
          Title of book is <b>{props.name}</b> and this book is
         sold by {props.displayName} and this book costs ₹ {props.price}
         </Card.Text>
-        <Button onClick={e=>navigate(`/book/view/${props.id}`)} variant="primary">View</Button>
+        <Button onClick={e=>navigate(props.link)} variant="primary">View</Button>
         <h1></h1>
       </Card.Body>
     </Card>

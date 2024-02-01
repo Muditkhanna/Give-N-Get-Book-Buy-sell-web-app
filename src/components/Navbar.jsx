@@ -13,10 +13,12 @@ const MyNavbar=()=>{
          <Navbar.Brand style ={{color:"lightblue"}}href="#home"> <FaHome/> GiveNGet</Navbar.Brand>
             <Nav className="me-auto">
             <Nav.Link style ={{color:"yellow"}} href="/">Home</Nav.Link>
-            <Nav.Link style ={{color:"orange"}} href="/register">LogIn</Nav.Link>
-            <Nav.Link style ={{color:"lime"}} href="/login">Register</Nav.Link>
+            <Nav.Link style ={{color:"orange"}} href="/login">LogIn</Nav.Link>
+            <Nav.Link style ={{color:"lime"}} href="/register">Register</Nav.Link>
             <Nav.Link style={{color:"lightblue"}} href="/book/list">Add Listing</Nav.Link>
+            <Nav.Link style={{color:"lightblue"}} href="/book/orders  ">Orders</Nav.Link>
             <Nav.Link style={{color:"lightblue"}} href=""><FaUser/>{firebase.titled}</Nav.Link>
+
            </Nav>
         </Container>
     </Navbar>

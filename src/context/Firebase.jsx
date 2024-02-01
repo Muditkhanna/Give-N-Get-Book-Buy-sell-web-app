@@ -1,4 +1,4 @@
-import { useContext,useState } from "react";
+import { useContext,useImperativeHandle,useState } from "react";
 import { createContext,useEffect } from "react";
 
 import {
@@ -11,7 +11,7 @@ import {
 
 import { initializeApp } from "firebase/app";
 
-import {getFirestore,collection,addDoc,getDocs,doc,getDoc} from "firebase/firestore"
+import {getFirestore,collection,addDoc,getDocs,doc,getDoc,query,where} from "firebase/firestore"
 import {getStorage,ref,uploadBytes,getDownloadURL} from "firebase/storage";
 
 const firebaseConfig = {
@@ -51,12 +51,15 @@ useEffect(()=>{
 },[]);
 
     //sign up user
-    const sign_up_email_password=(email,password)=>{
-     return createUserWithEmailAndPassword(Auth,email,password)
+    const sign_up_email_password=async(name,email,password)=>{
+     await addDoc(collection("users"),{
+        username:name
+     })
+     return createUserWithEmailAndPassword(Auth,email,password);
     }
     //sign in user
-    const sign_in_email_password=(email,password)=>{
-     return signInWithEmailAndPassword(Auth,email,password)
+    const sign_in_email_password=async(email,password)=>{
+     return await signInWithEmailAndPassword(Auth,email,password)
     }
    //sign in with Google
    const sign_in_Google=()=>signInWithPopup(Auth,googleProvider);
@@ -90,10 +93,44 @@ useEffect(()=>{
       const result=await getDoc(docRef);
       return result;
     }
+    const place_order=async(bookId,qty)=>{
+        const collectionref=collection(firestore,'books',bookId,"orders");
+        const result=await addDoc(collectionref,{
+          userID:user.uid,
+          userEmail:user.email,
+          displayName:user.displayName,
+          photoURL:user.photoURL,
+          qty:Number(qty),
+          orderdate:Date.now().toLocaleString()
+        });
+        return result;
+    }
+    const fetch_my_books=async(userId)=>{
+        
+        const collref=collection(firestore,"books");
+        const q=query(collref,where("userID","==",userId));
+        const result= await getDocs(q);
+        return result;
+    }
+    const get_orders=async(bookId)=>{
+        const collectionReff=collection(firestore,"books",bookId,'orders');
+        const result=await getDocs(collectionReff);
+        return result;
+    }
    return(
         <FirebaseContext.Provider value={{sign_up_email_password
-        ,sign_in_email_password,sign_in_Google,isLoggedin,handle_new_listing,
-        list_all_books,getimgURL,get_book_by_id,titled}}>
+        ,sign_in_email_password,
+        sign_in_Google,isLoggedin,
+        handle_new_listing,
+        list_all_books,
+        getimgURL,
+        get_book_by_id,
+        titled,
+        place_order,
+        fetch_my_books,
+        get_orders,
+        user,
+        }}>
             {props.children}
         </FirebaseContext.Provider>
     )

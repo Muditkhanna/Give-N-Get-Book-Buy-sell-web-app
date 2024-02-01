@@ -2,14 +2,14 @@ import React, { useEffect,useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebase } from "../context/Firebase";
 import { Button } from "react-bootstrap";
-
+import Form from "react-bootstrap/Form"
 const BookDetailPage=()=>{
     const params=useParams();
     const firebase=useFirebase();
     
     const [data,setdata]=useState(null);
     const [url,seturl]=useState(null);
-
+    const[qnt,setqnt]=useState(1);
     console.log(params);
 
     useEffect(()=>{
@@ -25,6 +25,11 @@ const BookDetailPage=()=>{
      }
     },[data])
     
+   const placeOrder=async()=>{
+   const result=await firebase.place_order(params.bookId,qnt);
+   console.log('order placed',result);
+   }
+
     if(!data){
         return(
             <h1>Loading...</h1>
@@ -40,7 +45,16 @@ const BookDetailPage=()=>{
         <h1><u>Owner Details</u></h1>
         <p> Name: {data.displayName}</p>
         <p> User email: {data.userEmail}</p>
-        <Button variant="success">Buy Now</Button>
+
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Quantity</Form.Label>
+        <Form.Control 
+        onChange={(e)=>setqnt(e.target.value)}
+        value={qnt}
+        type="Number" placeholder="Enter quantity" />
+        
+      </Form.Group>
+        <Button onClick={placeOrder} variant="success">Buy Now</Button>
     </div>
 }
 export default BookDetailPage;
